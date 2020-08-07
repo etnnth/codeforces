@@ -45,15 +45,17 @@ for _ in range(int(input())):
     moves = 0
     fill_tree(1)
     compute_decendances(vertexs[1])
-    dec = [vertexs[k].decendances for k in vertexs]
-    ws = [vertexs[k].weigth for k in vertexs]
-    cumul = [d*w for d,w in zip(dec,ws)]
-    while sum(cumul) > max_weigth:
+    somme = sum((v.decendances * v.weigth for _, v in vertexs.items()))
+    diffs = [v.decendances * math.ceil(v.weigth/2) for _, v in vertexs.items()]
+    indices = [k for k, _ in vertexs.items()]
+    while somme > max_weigth:
         moves += 1
-        diffs = [d * math.ceil(w/2) for d, w in zip(dec, ws)]
         indice = diffs.index(max(diffs))
-        ws[indice] = math.floor(ws[indice]/2)
-        cumul[indice] = dec[indice] * ws[indice]
+        weigth_lost = diffs[indice]
+        vi = indices[indice]
+        vertexs[vi].weigth = math.floor(vertexs[vi].weigth/2)
+        diffs[indice] = vertexs[vi].decendances * math.ceil(vertexs[vi].weigth/2)
+        somme -= weigth_lost
     print(moves)
 
 
