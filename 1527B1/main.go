@@ -69,7 +69,7 @@ func main() {
 		fmt.Sscan(scanner.Text(), &l)
 		scanner.Scan()
 		s = scanner.Text()
-		whoWin(s)
+		fmt.Println(whoWin(s))
 	}
 }
 
@@ -78,7 +78,7 @@ func main() {
 // She wins by chosing to change from 0 => 1 the 0 located in the
 // center of the palindrome, giving Bob a palindrome with an even number
 // of zero which is a losing position
-func whoWin(s) {
+func whoWin(s string) string {
 	count0 := 0
 	for _, c := range s {
 		if c == '0' {
@@ -86,8 +86,8 @@ func whoWin(s) {
 		}
 	}
 	if count0 > 1 && count0%2 == 1 {
-		fmt.Println("ALICE")
+        return "ALICE"
 	} else {
-		fmt.Println("BOB")
+		return "BOB"
 	}
 }
