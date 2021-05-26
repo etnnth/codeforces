@@ -7,4 +7,11 @@ build:
 fish: 
 	$(DOCKER_RUN) $(VOLUMES) -it --entrypoint fish raifml
 
+zip:
+	rm main.zip
+	zip -r main.zip main.py predict.py
+
+test:
+	$(DOCKER_RUN) $(VOLUMES) raifml ./test.sh
+
 
