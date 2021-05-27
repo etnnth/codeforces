@@ -4,11 +4,9 @@
 import collections
 import model
 import team
-import tensorflow
-import numpy
 
 MODEL = model.Model()
-MODEL.load("model.hdf5")
+MODEL.load("model.pth")
 
 number_of_test_case = int(input())
 
@@ -35,7 +33,7 @@ for i in range(number_of_test_case):
     referee_id = int(current_match[4])
     coeffs = [float(coeff) for coeff in current_match[5:]]
 
-    print(MODEL.predict_bet([
-        [division] + teams[home_team_id].factors() +
+    print(MODEL.predict_bet(
+        teams[home_team_id].factors() +
         teams[away_team_id].factors() + coeffs
-        ]), flush = True)
+        ), flush = True)

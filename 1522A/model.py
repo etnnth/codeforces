@@ -1,47 +1,82 @@
-import tensorflow
 import numpy
+import torch
+
+# Define model
+class NeuralNetwork(torch.nn.Module):
+    def __init__(self):
+        super(NeuralNetwork, self).__init__()
+        self.flatten = torch.nn.Flatten()
+        self.linear_relu_stack = torch.nn.Sequential(
+            torch.nn.Linear(9, 64),
+            torch.nn.ReLU(),
+            torch.nn.Linear(64, 64),
+            torch.nn.ReLU(),
+            torch.nn.Linear(64, 64),
+            torch.nn.ReLU(),
+            torch.nn.Linear(64, 64),
+            torch.nn.ReLU(),
+            torch.nn.Linear(64, 3),
+            torch.nn.ReLU()
+        )
+
+    def forward(self, x):
+        logits = self.linear_relu_stack(x)
+        return logits
 
 
 class Model:
     def __init__(self):
-        self.model = tensorflow.keras.Sequential([
-            tensorflow.keras.layers.Dense(10, activation='relu'),
-            tensorflow.keras.layers.Dense(3)
-            ])
-        self.compile()
-        self.probability_model = None
-        self.create_probability_model()
+        self.device = "cpu"
+        self.model = NeuralNetwork().to(self.device)
+        self.loss_fn = torch.nn.CrossEntropyLoss()
+        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=1e-3)
 
-    def create_probability_model(self):
-        self.probability_model = tensorflow.keras.Sequential([self.model,
-            tensorflow.keras.layers.Softmax()])
 
-    def compile(self):
-        self.model.compile(optimizer='adam',
-            loss=tensorflow.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-            metrics=['accuracy'])
-        self.create_probability_model()
+    def train(self, dataloader):
+        size = len(dataloader.dataset)
+        for batch, (X, y) in enumerate(dataloader):
+            X, y = X.to(self.device), y.to(self.device)
 
-    def predict(self, prediction_set):
-        return self.probability_model.predict(prediction_set)
+            # Compute prediction error
+            pred = self.model(X)
+            loss = self.loss_fn(pred, y)
 
-    def predict_bet(self, prediction_set):
-        return ["HOME", "DRAW", "AWAY"][numpy.argmax(self.predict(prediction_set))]
+            # Backpropagation
+            self.optimizer.zero_grad()
+            loss.backward()
+            self.optimizer.step()
 
-    def fit(self, training_set, training_label, epoch):
-        self.model.fit(training_set, training_label, epochs=epoch)
+            if batch % 100 == 0:
+                loss, current = loss.item(), batch * len(X)
+                print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]", flush = True)
+
+    def predict_bet(self, x):
+        self.model.eval()
+        x = torch.Tensor(numpy.asarray(x))
+        with torch.no_grad():
+            return ["HOME", "DRAW", "AWAY"][self.model(x).argmax(0)]
+
+    def fit(self, training_set, training_label, epochs):
+        print(self.model)
+        tensor_x = torch.Tensor(training_set)
+        tensor_y = torch.Tensor(training_label).to(torch.long)
+        dataset = torch.utils.data.TensorDataset(tensor_x, tensor_y)
+        dataloader = torch.utils.data.DataLoader(dataset, batch_size=64)
+        for t in range(epochs):
+            print(f"Epoch {t+1}\n-------------------------------", flush = True)
+            self.train(dataloader)
+        print("Done!")
 
     def evaluate(self, test_set, test_label):
-        test_loss, test_acc = self.model.evaluate(test_set, test_label, verbose=2)
+        test_loss, test_acc = 1, 1
         print('\nTest loss:', test_loss)
         print('Test accuracy:', test_acc)
         print()
 
     def save(self, file):
-        self.model.save(file)
+        torch.save(self.model.state_dict(), file)
 
     def load(self, file):
-        self.model = tensorflow.keras.models.load_model(file)
-        self.compile()
-        self.create_probability_model()
+        self.model = NeuralNetwork()
+        self.model.load_state_dict(torch.load(file))
 

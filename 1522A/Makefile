@@ -3,12 +3,12 @@ VOLUMES = -v $(CURDIR):/raifml
 
 
 
-main.zip: main.py team.py model.py model.hdf5
+main.zip: main.py team.py model.py model.pth
 	$(DOCKER_RUN) $(VOLUMES) raifml ./test.sh
 	$(RM) main.zip
-	zip -r main.zip main.py team.py model.py model.hdf5
+	zip -r main.zip main.py team.py model.py model.pth
 
-model.hdf5: train.csv train.py model.py team.py
+model.pth: train.csv train.py model.py team.py
 	$(DOCKER_RUN) $(VOLUMES) raifml python3 train.py
 
 build:
@@ -18,6 +18,6 @@ sh:
 	$(DOCKER_RUN) $(VOLUMES) -it --entrypoint sh raifml
 
 clean:
-	$(RM) model.hdf5
+	$(RM) model.pth
 	$(RM) __pycache__ -r
 

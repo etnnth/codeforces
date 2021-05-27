@@ -13,14 +13,12 @@ TRAINING_SET = []
 LABELS = []
 
 def create_training_set(match):
-    division = int(match["Division"])
     home_id = int(match["home_team"])
     away_id = int(match["away_team"])
     home_team_score = int(match["full_time_home_goals"])
     away_team_score = int(match["full_time_away_goals"])
     coeffs = [match["home_coef"], match["draw_coef"], match["away_coef"]]
     TRAINING_SET.append(
-            [division] +
             TEAMS[home_id].factors() +
             TEAMS[away_id].factors() +
             coeffs
@@ -45,6 +43,6 @@ LABELS = numpy.asarray(LABELS)
 
 
 m = model.Model()
-m.fit(TRAINING_SET, LABELS, 10)
+m.fit(TRAINING_SET, LABELS, 100)
 m.evaluate(TRAINING_SET, LABELS)
-m.save("model.hdf5")
+m.save("model.pth")
