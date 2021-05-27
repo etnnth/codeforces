@@ -7,15 +7,15 @@ class NeuralNetwork(torch.nn.Module):
         super(NeuralNetwork, self).__init__()
         self.flatten = torch.nn.Flatten()
         self.linear_relu_stack = torch.nn.Sequential(
-            torch.nn.Linear(23, 64),
+            torch.nn.Linear(23, 128),
             torch.nn.ReLU(),
-            torch.nn.Linear(64, 64),
+            torch.nn.Linear(128, 128),
             torch.nn.ReLU(),
-            torch.nn.Linear(64, 64),
+            torch.nn.Linear(128, 128),
             torch.nn.ReLU(),
-            torch.nn.Linear(64, 64),
+            torch.nn.Linear(128, 128),
             torch.nn.ReLU(),
-            torch.nn.Linear(64, 3),
+            torch.nn.Linear(128, 3),
             torch.nn.ReLU()
         )
 
@@ -29,7 +29,7 @@ class Model:
         self.device = "cpu"
         self.model = NeuralNetwork().to(self.device)
         self.loss_fn = torch.nn.CrossEntropyLoss()
-        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=1e-3)
+        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=1e-2)
 
 
     def train(self, dataloader):
