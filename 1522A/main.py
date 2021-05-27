@@ -34,6 +34,6 @@ for i in range(number_of_test_case):
     coeffs = [float(coeff) for coeff in current_match[5:]]
 
     print(MODEL.predict_bet(
-        teams[home_team_id].factors() +
-        teams[away_team_id].factors() + coeffs
+        teams[home_team_id].previous +
+        teams[away_team_id].previous + coeffs
         ), flush = True)

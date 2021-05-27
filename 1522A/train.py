@@ -19,10 +19,12 @@ def create_training_set(match):
     away_team_score = int(match["full_time_away_goals"])
     coeffs = [match["home_coef"], match["draw_coef"], match["away_coef"]]
     TRAINING_SET.append(
-            TEAMS[home_id].factors() +
-            TEAMS[away_id].factors() +
+            TEAMS[home_id].previous +
+            TEAMS[away_id].previous +
             coeffs
             )
+    TEAMS[home_id].add_match(home_team_score - away_team_score)
+    TEAMS[away_id].add_match(away_team_score - home_team_score)
     if home_team_score > away_team_score:
         TEAMS[home_id].wins += 1
         TEAMS[away_id].loses += 1

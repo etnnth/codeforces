@@ -7,7 +7,7 @@ class NeuralNetwork(torch.nn.Module):
         super(NeuralNetwork, self).__init__()
         self.flatten = torch.nn.Flatten()
         self.linear_relu_stack = torch.nn.Sequential(
-            torch.nn.Linear(9, 64),
+            torch.nn.Linear(23, 64),
             torch.nn.ReLU(),
             torch.nn.Linear(64, 64),
             torch.nn.ReLU(),
