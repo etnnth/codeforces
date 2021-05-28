@@ -15,6 +15,12 @@ class NeuralNetwork(torch.nn.Module):
             torch.nn.ReLU(),
             torch.nn.Linear(128, 128),
             torch.nn.ReLU(),
+            torch.nn.Linear(128, 128),
+            torch.nn.ReLU(),
+            torch.nn.Linear(128, 128),
+            torch.nn.ReLU(),
+            torch.nn.Linear(128, 128),
+            torch.nn.ReLU(),
             torch.nn.Linear(128, 3),
             torch.nn.ReLU()
         )

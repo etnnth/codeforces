@@ -45,6 +45,6 @@ LABELS = numpy.asarray(LABELS)
 
 
 m = model.Model()
-m.fit(TRAINING_SET, LABELS, 1000)
+m.fit(TRAINING_SET, LABELS, 100)
 m.evaluate(TRAINING_SET, LABELS)
 m.save("model.pth")
