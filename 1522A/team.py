@@ -6,7 +6,7 @@ class Team:
         self.draws = 0
         self.loses = 0
         # keeps results of last 10 matchs
-        self.previous = [0 for _ in range(10)]
+        self.previous = [0 for _ in range(100)]
 
     def win_factor(self):
         return self.wins / (self.wins + self.draws + self.loses + 1e-3)
