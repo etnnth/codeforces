@@ -16,6 +16,8 @@ for i in range(number_of_test_case):
         previous_results = input().split()
         home_score = int(previous_results[0])
         away_score = int(previous_results[1])
+        teams[home_team_id].add_match(home_score - away_score)
+        teams[away_team_id].add_match(away_score - home_score)
         if home_score > away_score:
             teams[home_team_id].wins += 1
             teams[away_team_id].loses += 1
@@ -32,8 +34,9 @@ for i in range(number_of_test_case):
     away_team_id = int(current_match[3])
     referee_id = int(current_match[4])
     coeffs = [float(coeff) for coeff in current_match[5:]]
-
-    print(MODEL.predict_bet(
-        teams[home_team_id].previous +
-        teams[away_team_id].previous + coeffs
-        ), flush = True)
+    pred = MODEL.predict_bet(
+            teams[home_team_id].previous +
+            teams[away_team_id].previous +
+            coeffs
+            )
+    print(pred, flush = True)

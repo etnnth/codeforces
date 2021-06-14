@@ -5,20 +5,9 @@ import torch
 class NeuralNetwork(torch.nn.Module):
     def __init__(self):
         super(NeuralNetwork, self).__init__()
-        self.flatten = torch.nn.Flatten()
         self.linear_relu_stack = torch.nn.Sequential(
             torch.nn.Linear(203, 512),
-            torch.nn.ReLU(),
             torch.nn.Linear(512, 512),
-            torch.nn.ReLU(),
-            torch.nn.Linear(512, 512),
-            torch.nn.ReLU(),
-            torch.nn.Linear(512, 512),
-            torch.nn.ReLU(),
-            torch.nn.Linear(512, 512),
-            torch.nn.ReLU(),
-            torch.nn.Linear(512, 512),
-            torch.nn.ReLU(),
             torch.nn.Linear(512, 512),
             torch.nn.ReLU(),
             torch.nn.Linear(512, 3),
@@ -35,8 +24,7 @@ class Model:
         self.device = "cpu"
         self.model = NeuralNetwork().to(self.device)
         self.loss_fn = torch.nn.CrossEntropyLoss()
-        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=1e-2)
-
+        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=1e-3)
 
     def train(self, dataloader):
         size = len(dataloader.dataset)
@@ -67,7 +55,7 @@ class Model:
         tensor_x = torch.Tensor(training_set)
         tensor_y = torch.Tensor(training_label).to(torch.long)
         dataset = torch.utils.data.TensorDataset(tensor_x, tensor_y)
-        dataloader = torch.utils.data.DataLoader(dataset, batch_size=64)
+        dataloader = torch.utils.data.DataLoader(dataset, batch_size=8)
         for t in range(epochs):
             print(f"Epoch {t+1}\n-------------------------------", flush = True)
             self.train(dataloader)
